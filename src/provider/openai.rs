@@ -57,9 +57,7 @@ impl OpenAIProvider {
             .await?;
 
         let status = response.status();
-
-        println!("Status: {}", status);
-
+    
         match status {
             StatusCode::OK => {
                 let response_json: Value = response.json().await?;
