@@ -1,6 +1,7 @@
 use crate::config::cli::ProviderType;
 use async_trait::async_trait;
 use claude::{ClaudeConfig, ClaudeProvider};
+use gemini::{GeminiConfig, GeminiProvider};
 use groq::{GroqConfig, GroqProvider};
 use ollama::{OllamaConfig, OllamaProvider};
 use openai::{OpenAIConfig, OpenAIProvider};
@@ -15,6 +16,7 @@ use crate::{
 };
 
 pub mod claude;
+pub mod gemini;
 pub mod groq;
 pub mod ollama;
 pub mod openai;
@@ -51,6 +53,7 @@ pub enum LumenProvider {
     Claude(Box<ClaudeProvider>),
     Ollama(Box<OllamaProvider>),
     OpenRouter(Box<OpenRouterProvider>),
+    Gemini(Box<GeminiProvider>),
 }
 
 impl LumenProvider {
@@ -97,6 +100,12 @@ impl LumenProvider {
                     LumenProvider::OpenRouter(Box::new(OpenRouterProvider::new(client, config)));
                 Ok(provider)
             }
+            ProviderType::Gemini => {
+                let api_key = api_key.ok_or(LumenError::MissingApiKey("Gemini".to_string()))?;
+                let config = GeminiConfig::new(api_key, model);
+                let provider = LumenProvider::Gemini(Box::new(GeminiProvider::new(client, config)));
+                Ok(provider)
+            }
         }
     }
 
@@ -109,6 +118,7 @@ impl LumenProvider {
             LumenProvider::Claude(provider) => provider.complete(prompt).await,
             LumenProvider::Ollama(provider) => provider.complete(prompt).await,
             LumenProvider::OpenRouter(provider) => provider.complete(prompt).await,
+            LumenProvider::Gemini(provider) => provider.complete(prompt).await,
         }
     }
 
@@ -121,6 +131,7 @@ impl LumenProvider {
             LumenProvider::Claude(provider) => provider.complete(prompt).await,
             LumenProvider::Ollama(provider) => provider.complete(prompt).await,
             LumenProvider::OpenRouter(provider) => provider.complete(prompt).await,
+            LumenProvider::Gemini(provider) => provider.complete(prompt).await,
         }
     }
 }

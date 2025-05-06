@@ -1,4 +1,3 @@
-
 # Lumen CLI 扩展版
 
 这是一个基于 [Lumen](https://github.com/jnsahaj/lumen) 的扩展项目。Lumen 是一个使用 AI 来生成 git commit 信息、解释代码变更等功能的命令行工具。本项目在原有基础上进行了一些功能扩展和优化。
@@ -7,6 +6,7 @@
 
 - 支持自定义 OpenAI API 代理地址，可以使用第三方中转 API 服务
 - 完整支持多个 AI 提供商配置
+- 新增 Google Gemini 模型支持
 
 ## 安装方法
 
@@ -59,12 +59,35 @@ export LUMEN_API_BASE_URL=YOUR_PROXY_URL  # 例如: https://your-proxy-domain/v1
 
 这样可以使用淘宝等平台购买的 OpenAI API 中转服务，降低使用成本。
 
+### Gemini 配置
+
+同样可以通过环境变量或配置文件配置 Gemini:
+
+```bash
+# 在 .zshrc 或 .bashrc 中添加
+export LUMEN_AI_PROVIDER=gemini
+export LUMEN_API_KEY=YOUR_GEMINI_API_KEY
+export LUMEN_AI_MODEL=gemini-1.5-flash-latest # 可选, 默认 gemini-1.5-flash-latest
+```
+
+或者在 `lumen.config.json` 中：
+
+```json
+{
+  "provider": "gemini",
+  "api_key": "YOUR_GEMINI_API_KEY",
+  "model": "gemini-1.5-pro-latest"
+}
+```
+
 ## 其他功能
 
 - 智能生成 commit 信息
 - 解释代码变更
 - 交互式搜索 commit 历史
 - 支持自定义配置
+
+支持的 Provider: Phind (默认), OpenAI, Groq, Claude, Ollama, OpenRouter, Gemini.
 
 ## 配置
 
